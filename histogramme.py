@@ -23,7 +23,11 @@ def jointHist(I, J, bin):
     for i in range(0, I.shape[0]):
         for j in range(0, I.shape[1]):
             bin_i = int(I[i, j] // nb_val_per_bin)
+            if(bin_i > bin):
+                bin_i = bin - 1
             bin_j = int(J[i, j] // nb_val_per_bin)
+            if(bin_j > bin):
+                bin_j = bin - 1
             hist[bin_i, bin_j] += 1
     # hist = hist / (I.shape[0] * I.shape[1])
     return hist
