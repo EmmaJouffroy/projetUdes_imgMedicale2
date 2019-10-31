@@ -1,9 +1,5 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from PIL import Image
-from mpl_toolkits import mplot3d
-from itertools import product, combinations
-
 
 if __name__ == '__main__':
     fig = plt.figure()
