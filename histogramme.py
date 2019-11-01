@@ -39,8 +39,8 @@ def JointHist(I, J, bin):
 
 if __name__ == '__main__':
     bin = 20
-    I = np.array(Image.open('Data/BrainMRI_1.jpg'))
-    J = np.array(Image.open('Data/BrainMRI_2.jpg'))
+    I = np.array(Image.open('Data/I3.jpg'))
+    J = np.array(Image.open('Data/I4.jpg'))
     JointHist(I, J, bin)
     plt.show('Data/BrainMRI_1.jpg')
 
