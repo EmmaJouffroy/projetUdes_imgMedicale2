@@ -29,7 +29,6 @@ def jointHist(I, J, bin):
             if(bin_j > bin):
                 bin_j = bin - 1
             hist[bin_i, bin_j] += 1
-    # hist = hist / (I.shape[0] * I.shape[1])
     return hist
 
 
@@ -45,3 +44,6 @@ if __name__ == '__main__':
     plt.imshow(hist, cmap='gray')
     plt.colorbar()
     plt.show()
+
+
+
