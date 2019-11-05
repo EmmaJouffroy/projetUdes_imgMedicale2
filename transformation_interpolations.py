@@ -36,6 +36,24 @@ def interpol_bilin(i, j, img):
         return aires, index, out
 
 
+def translation(img, p, q, type="NN"):
+    new_img = np.zeros((img.shape[0], img.shape[1]))
+    for i in range(img.shape[0]):
+        for j in range(img.shape[1]):
+            if type == "NN":
+                # i,j est le pixel en cours d'analyse
+                i_new, j_new, out = interpol_nn(i + p, j + q, img)
+                if out is not True:
+                    new_img[i_new, j_new] = img[i, j]
+            elif type == "Bilineaire":
+                aires, index, out = interpol_bilin(i-p, j-q, img)
+                if out is not True:
+                    new_img[i, j] = aires[0]*img[index[0], index[2]] \
+                                    + aires[1]*img[index[1], index[2]] \
+                                    + aires[2]*img[index[0], index[3]] \
+                                    + aires[3]*img[index[1], index[3]]
+    return new_img
+
 def rotation(img, theta, type="NN"):
     new_img = np.zeros((img.shape[0], img.shape[1]))
     theta = (theta*math.pi)/180
@@ -59,10 +77,9 @@ def rotation(img, theta, type="NN"):
 
 if __name__ == '__main__':
     img = np.array(Image.open('Data/BrainMRI_2.jpg'))
-    J = rotation(img, 30, type="Bilineaire")
+    J = translation(img, 70, 40, type="NN")
     plt.figure()
     plt.imshow(img)
-    plt.show()
     plt.figure()
     plt.imshow(J)
     plt.show()
