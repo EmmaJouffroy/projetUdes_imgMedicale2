@@ -8,8 +8,9 @@ verify_ssl = true
 [packages]
 numpy = "*"
 matplotlib = "*"
+scikit-learn = "*"
+scikit-image = "*"
 pillow = "*"
-scipy = "*"
 
 [requires]
 python_version = "3.7"
