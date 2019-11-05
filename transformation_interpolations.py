@@ -54,6 +54,7 @@ def translation(img, p, q, type="NN"):
                                     + aires[3]*img[index[1], index[3]]
     return new_img
 
+
 def rotation(img, theta, type="NN"):
     new_img = np.zeros((img.shape[0], img.shape[1]))
     theta = (theta*math.pi)/180

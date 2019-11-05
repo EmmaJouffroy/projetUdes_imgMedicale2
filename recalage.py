@@ -1,9 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-import math
-from mpl_toolkits.mplot3d import Axes3D
 from PIL import Image
-from skimage.restoration import denoise_nl_means, denoise_bilateral
 from transformation_interpolations import translation, rotation
 
 
@@ -30,6 +27,7 @@ def translation_recalage(I, J, iterMax):
     plt.show()
     return J2
 
+
 def rotation_recalage(I, J, iterMax, lamb):
     SSD = []
     theta = 0
@@ -40,13 +38,17 @@ def rotation_recalage(I, J, iterMax, lamb):
         J2x = np.gradient(J2, axis=0)
         J2y= np.gradient(J2, axis=1)
         error = J2 - I
-        print(np.sum(error))
         cnt = 0
         for x in range(J2.shape[0]):
             for y in range(J2.shape[1]):
-                res1 = J2x[x, y] * ((- x * np.sin(theta)) - (y * np.cos(theta)))
-                res2 = J2y[x, y] * ((x * np.cos(theta)) - (y * np.sin(theta)))
-                cnt = cnt + error[x, y] * (res1 + res2)
+                x_p = int(np.ceil(x*np.cos(theta)-y*np.sin(theta)))
+                y_p = int(np.ceil(x * np.sin(theta) + y * np.cos(theta)))
+                print(x_p, y_p)
+                if (x_p > 0) & (x_p < J2.shape[0]-1):
+                    if (y_p > 0) & (y_p < J2.shape[1]-1):
+                        res1 = J2x[x_p, y_p] * ((- x * np.sin(theta)) - (y * np.cos(theta)))
+                        res2 = J2y[x_p, y_p] * ((x * np.cos(theta)) - (y * np.sin(theta)))
+                        cnt = cnt + error[x, y] * (res1 + res2)
         ssd_d = 2 * cnt
         theta = theta - lamb * ssd_d
     plt.figure()
@@ -54,12 +56,14 @@ def rotation_recalage(I, J, iterMax, lamb):
     plt.show()
     return J2
 
+#scipy.map_coordinate
+
 if __name__ == '__main__':
-    I = np.array(Image.open('Data/BrainMRI_1.jpg'))
-    J = np.array(Image.open('Data/BrainMRI_2.jpg'))
-   # J = rotation(I, 5)
+    I = np.array(Image.open('Data/BrainMRI_1.jpg')).astype(np.int32)
+    J = np.array(Image.open('Data/BrainMRI_2.jpg')).astype(np.int32)
+    # J = rotation(I, 5)
     plt.figure()
-    plt.imshow(rotation_recalage(I, J, 2, 1))
+    plt.imshow(rotation_recalage(I, J, 10, (10**-8)))
     plt.title("image recalée")
     plt.figure()
     plt.title("image de base")

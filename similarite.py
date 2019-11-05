@@ -51,6 +51,7 @@ def IM(hist):
     mutual_info = np.sum(hist[nzs] * np.log(hist[nzs] / px_py[nzs]))
     return mutual_info
 
+
 if __name__ == '__main__':
     I = np.array(Image.open('Data/I2.jpg'))
     J = np.array(Image.open('Data/J2.jpg'))
