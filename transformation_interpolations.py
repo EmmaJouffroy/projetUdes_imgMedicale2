@@ -102,14 +102,17 @@ def rotation(img, theta, type="NN"):
     return new_img
 
 
-def rotation_scipy(img, theta):
-    img = img.astype(float)
+def rotation_scipy(img, theta_rad):
+    """
+    :param img:
+    :param theta_rad: Toujours fournir un angle en radian!!!
+    :return:
+    """
     dims = img.shape
-    theta_rad = (theta*math.pi)/180
+    # theta_rad = np.rad2deg(theta)
     x, y = np.meshgrid(np.arange(dims[1]), np.arange(dims[0]))
-    x, y = x*np.cos(theta_rad) - y*np.sin(theta_rad),  x*np.sin(theta_rad) + y*np.cos(theta_rad)
+    x, y = x*np.cos(theta_rad) + y*np.sin(theta_rad),   -x*np.sin(theta_rad) + y*np.cos(theta_rad)
     rotated = ndimage.map_coordinates(img, [y, x], mode='constant', cval=0, order=3)
-    print(rotated)
     return rotated
 
 
@@ -124,10 +127,10 @@ def translation_scipy(img, t):
 
 if __name__ == '__main__':
     img = np.array(Image.open('Data/BrainMRI_2.jpg'))
-    J = translation_scipy(img, [20, 20])
+    # img = np.array([[1, 2, 3], [4, 5, 6]])
     plt.figure()
     plt.imshow(img)
-    plt.figure()
-    plt.imshow(J)
+    plt.title('Image de 20 degres (traduit en radian)')
+    plt.imshow(rotation_scipy(img, np.deg2rad(20)))
     plt.show()
 
