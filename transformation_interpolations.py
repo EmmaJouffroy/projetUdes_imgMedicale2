@@ -2,9 +2,17 @@ import numpy as np
 import matplotlib.pyplot as plt
 import math
 from PIL import Image
+from scipy import ndimage
 
 
 def interpol_nn(i, j, img):
+    """
+    Méthode non utilisée pour le recalage, dévéloppement "à la main" de l'interpolation au plus proche voisin
+    :param i:
+    :param j:
+    :param img:
+    :return:
+    """
     i_new = int(np.round(i))
     j_new = int(np.round(j))
     out = False
@@ -18,6 +26,13 @@ def interpol_nn(i, j, img):
 
 
 def interpol_bilin(i, j, img):
+    """
+    Méthode non utilisée pour le recalage, dévéloppement "à la main" de l'interpolation bilineaire
+    :param i:
+    :param j:
+    :param img:
+    :return:
+    """
     out = False
     left_corners = (np.floor(i))
     right_corners = (np.ceil(i))
@@ -37,6 +52,17 @@ def interpol_bilin(i, j, img):
 
 
 def translation(img, p, q, type="NN"):
+    """
+    Méthode non utilisée pour le recalage, dévéloppement "à la main" d'une translation utilisant les méthodes d'inter-
+    polation développé ci-avant.
+    Note: Pour éviter d'avoir une image présentant des "trous", on parcourt la grille de l'image d'arrivée (et on
+    revient à l'image de départ)
+    :param img:
+    :param p:
+    :param q:
+    :param type:
+    :return:
+    """
     new_img = np.zeros((img.shape[0], img.shape[1]))
     for i in range(img.shape[0]):
         for j in range(img.shape[1]):
@@ -76,9 +102,29 @@ def rotation(img, theta, type="NN"):
     return new_img
 
 
+def rotation_scipy(img, theta):
+    img = img.astype(float)
+    dims = img.shape
+    theta_rad = (theta*math.pi)/180
+    x, y = np.meshgrid(np.arange(dims[1]), np.arange(dims[0]))
+    x, y = x*np.cos(theta_rad) - y*np.sin(theta_rad),  x*np.sin(theta_rad) + y*np.cos(theta_rad)
+    rotated = ndimage.map_coordinates(img, [y, x], mode='constant', cval=0, order=3)
+    print(rotated)
+    return rotated
+
+
+def translation_scipy(img, t):
+    dims = img.shape
+    x, y = np.meshgrid(np.arange(dims[1]), np.arange(dims[0]))
+    xp = x - t[0]
+    yp = y - t[1]
+    translated = ndimage.map_coordinates(img, [yp, xp], mode='constant', cval=0, order=3)
+    return translated
+
+
 if __name__ == '__main__':
     img = np.array(Image.open('Data/BrainMRI_2.jpg'))
-    J = translation(img, 70, 40, type="NN")
+    J = translation_scipy(img, [20, 20])
     plt.figure()
     plt.imshow(img)
     plt.figure()
