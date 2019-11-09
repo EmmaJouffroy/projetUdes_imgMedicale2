@@ -21,6 +21,7 @@ if __name__ == '__main__':
                 print("python main.py 1 NumeroDuCouple")
                 print("Les couples sont indexes de 1 à 6")
     elif sys.argv[1] == 2:
+        # lancer les tests des fonctions de similarité
         print('allo')
     elif sys.argv[1] == 3:
         print('allo')
