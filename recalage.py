@@ -50,14 +50,14 @@ def translation_recalage(I, J, iterMax, lamb):
     J_derivate_y = np.gradient(J, axis=0)
     evol_lamb = [lamb]
     for i in range(1, iterMax):
-        print(i)
+        print(u)
         error = J2 - I
         SSD.append((np.sum(error**2)))
         J2_derivate_xp = translation_scipy(J_derivate_x, u)
         J2_derivate_yp = translation_scipy(J_derivate_y, u)
         ssd_p = 2 * np.sum(error*J2_derivate_xp)
         ssd_q = 2 * np.sum(error*J2_derivate_yp)
-        u = u + [(lamb/i) * ssd_p, (lamb/i) * ssd_q]
+        u = u + [lamb * ssd_p, lamb * ssd_q]
         J2 = translation_scipy(J, u)
         evol_lamb.append(lamb/i)
     return J2, SSD
@@ -149,7 +149,6 @@ def afficher_resultats(img_init, img_to_move, img_recale, SSD_curve):
     :param SSD_curve:
     :return:
     """
-
     ax1 = plt.subplot2grid((2, 4), (0, 0), colspan=1)
     ax1.axis('off')
     ax1.set_title('Image de base')
@@ -192,10 +191,10 @@ if __name__ == '__main__':
 
     def test_translation_recalage():
         I = np.array(Image.open('Data/BrainMRI_1.jpg'))
+        J = translation_scipy(I, [-5, 12])
         I = ndimage.gaussian_filter((I / np.amax(I)), sigma=1)
-        J = np.array(Image.open('Data/BrainMRI_2.jpg'))
         J = ndimage.gaussian_filter((J / np.amax(J)), sigma=1)
-        translated, ssd = translation_recalage(I, J, 10000, lamb=0.1)
+        translated, ssd = translation_recalage(I, J, 10000, lamb=0.0001)
         afficher_resultats(I, J, translated, ssd)
 
     # test_translation_recalage()
@@ -203,20 +202,20 @@ if __name__ == '__main__':
 
     def test_rotation_recalage():
         I = np.array(Image.open('Data/BrainMRI_3.jpg'))
+        J = rotation_scipy(I, np.deg2rad(12))
         I = ndimage.gaussian_filter((I / np.amax(I)), sigma=1)
-        J = np.array(Image.open('Data/BrainMRI_4.jpg'))
         J = ndimage.gaussian_filter((J / np.amax(J)), sigma=1)
-        translated, ssd = rotation_recalage(I, J, 5000, lamb=0.00000001)
+        translated, ssd = rotation_recalage(I, J, 10000, lamb=0.00000001)
         afficher_resultats(I, J, translated, ssd)
 
-    # test_translation_recalage()
+    # test_rotation_recalage()
 
     def test_iconique_recalage():
         I = np.array(Image.open('Data/BrainMRI_1.jpg'))
         I = ndimage.gaussian_filter((I / np.amax(I)), sigma=1)
-        J = np.array(Image.open('Data/BrainMRI_4.jpg'))
+        J = np.array(Image.open('Data/BrainMRI_2.jpg'))
         J = ndimage.gaussian_filter((J / np.amax(J)), sigma=1)
-        iconique, ssd = iconique_recalage(I, J, 5000, lamb=0.00000001)
+        iconique, ssd = iconique_recalage(I, J, 10000, lamb=0.0000000001)
         afficher_resultats(I, J, iconique, ssd)
 
     test_iconique_recalage()
