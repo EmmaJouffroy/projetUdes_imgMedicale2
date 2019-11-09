@@ -113,7 +113,7 @@ if __name__ == '__main__':
         plt.title("mise à l'échelle, rotation et translation")
         plt.show()
 
-    test_similitude(1.5, 0, 90, 90, 2, 20, 20)
+    # test_similitude(1.5, 0, 90, 90, 2, 20, 20)
     # test_similitude(0, 0, 0, 0, 0, 0, 0, M1)
     # test_similitude(0, 0, 0, 0, 0, 0, 0, M2)
     # test_similitude(0, 0, 0, 0, 0, 0, 0, M3)
