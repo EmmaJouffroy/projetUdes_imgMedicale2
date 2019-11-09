@@ -139,35 +139,38 @@ def afficher_histogrammes_joints(images_I, images_J, hist_joint):
     plt.show()
 
 
+def test_joint_histogramme(nbr):
+    if nbr == 1:
+        I = np.array(Image.open('Data/I'+str(nbr)+'.png'))
+        J = np.array(Image.open('Data/J'+str(nbr)+'.png'))
+    else:
+        I = np.array(Image.open('Data/I'+str(nbr)+'.jpg'))
+        J = np.array(Image.open('Data/J'+str(nbr)+'.jpg'))
+    hist = jointHist(I, J, 50)
+    norm = LogNorm(1, np.amax(hist), clip='True')
+    plt.imshow(hist+1, norm=norm, cmap='jet', origin="lower")
+    plt.colorbar()
+    plt.title("Histogramme I"+str(nbr)+"/J"+str(nbr)+"\n Nombre de classes = 50")
+    plt.show()
+
+
+def test_afficher_histogramme():
+    bin = 50
+    images_I = [np.array(Image.open('Data/I1.png')), np.array(Image.open('Data/I2.jpg')),
+                np.array(Image.open('Data/I3.jpg')),  np.array(Image.open('Data/I4.jpg')),
+                np.array(Image.open('Data/I5.jpg')), np.array(Image.open('Data/I6.jpg'))]
+    images_J = [np.array(Image.open('Data/J1.png')), np.array(Image.open('Data/J2.jpg')),
+                np.array(Image.open('Data/J3.jpg')), np.array(Image.open('Data/J4.jpg')),
+                np.array(Image.open('Data/J5.jpg')), np.array(Image.open('Data/J6.jpg'))]
+    hist = []
+    for i in range(0, 6):
+        hist.append(jointHist(images_I[i], images_J[i], bin))
+    afficher_histogrammes_joints(images_I, images_J, hist)
+
+
 if __name__ == '__main__':
     """
     L'ensemble des fonctions ont été utilisé dans la phase de test et de rédaction du manuscrit du projet 
     """
-
-    def test_joint_histogramme():
-        I = np.array(Image.open('Data/I6.jpg'))
-        J = np.array(Image.open('Data/J6.jpg'))
-        hist = jointHist(I, J, 50)
-        norm = LogNorm(1, np.amax(hist), clip='True')
-        plt.imshow(hist+1, norm=norm, cmap='jet', origin="lower")
-        plt.colorbar()
-        plt.title("Histogramme I6/J6 \n Nombre de classes = 50")
-        plt.show()
-
     # test_joint_histogramme
-
-    def test_afficher_histogramme():
-        bin = 50
-        images_I = [np.array(Image.open('Data/I1.png')), np.array(Image.open('Data/I2.jpg')),
-                    np.array(Image.open('Data/I3.jpg')),  np.array(Image.open('Data/I4.jpg')),
-                    np.array(Image.open('Data/I5.jpg')), np.array(Image.open('Data/I6.jpg'))]
-        images_J = [np.array(Image.open('Data/J1.png')), np.array(Image.open('Data/J2.jpg')),
-                    np.array(Image.open('Data/J3.jpg')), np.array(Image.open('Data/J4.jpg')),
-                    np.array(Image.open('Data/J5.jpg')), np.array(Image.open('Data/J6.jpg'))]
-        hist = []
-
-        for i in range(0, 6):
-            hist.append(jointHist(images_I[i], images_J[i], bin))
-        afficher_histogrammes_joints(images_I, images_J, hist)
-
     # test_afficher_histogramme()
