@@ -16,7 +16,6 @@ def lucas_kanade_recalage(I, J, iterMax):
     """
     SSD = []
     u = np.array([0, 0])
-    # J2 = translation_scipy(J, u)
     J2 = ndimage.interpolation.shift(J, u)
     for i in range(0, iterMax):
         SSD.append(np.sum((J2-I)**2))
@@ -31,51 +30,54 @@ def lucas_kanade_recalage(I, J, iterMax):
         M = np.array(([J2x_ss, J2yx], [J2yx, J2y_ss]))
         b = np.array(([J2xt], [J2yt]))
         u = u + np.squeeze(np.linalg.solve(M, b), axis=1)
-        print(u)
         J2 = ndimage.interpolation.shift(J, u)
-        # J2 = translation_scipy(J, u)
-    plt.figure()
-    plt.plot(SSD)
-    plt.show()
-    return J2
+    return J2, SSD
 
 
-def gradient_descent_translation_recalage(I, J, iterMax, lamb):
+def translation_recalage(I, J, iterMax, lamb):
+    """
+
+    :param I:
+    :param J:
+    :param iterMax:
+    :param lamb:
+    :return:
+    """
     SSD = []
     u = np.array([0, 0])
-    J2 = J
     J2 = translation_scipy(J, u)
     J_derivate_x = np.gradient(J, axis=1)
     J_derivate_y = np.gradient(J, axis=0)
     evol_lamb = [lamb]
     for i in range(1, iterMax):
+        print(i)
         error = J2 - I
         SSD.append((np.sum(error**2)))
         J2_derivate_xp = translation_scipy(J_derivate_x, u)
         J2_derivate_yp = translation_scipy(J_derivate_y, u)
-        print((error*J2_derivate_xp).shape)
         ssd_p = 2 * np.sum(error*J2_derivate_xp)
         ssd_q = 2 * np.sum(error*J2_derivate_yp)
         u = u + [(lamb/i) * ssd_p, (lamb/i) * ssd_q]
         J2 = translation_scipy(J, u)
-        print(u)
         evol_lamb.append(lamb/i)
-    plt.figure()
-    plt.plot(SSD)
-    plt.figure()
-    plt.plot(evol_lamb)
-    plt.show()
-    return J2
+    return J2, SSD
 
 
 def rotation_recalage(I, J, iterMax, lamb):
+    """
+
+    :param I:
+    :param J:
+    :param iterMax:
+    :param lamb:
+    :return:
+    """
     SSD = []
     theta = 0
     J2 = rotation_scipy(J, theta)
     J_derivate_x = np.gradient(J, axis=0)
     J_derivate_y = np.gradient(J, axis=1)
     x, y = np.meshgrid(range(I.shape[0]), range(I.shape[1]))
-    # theta = np.deg2rad(theta)
     for i in range(1, iterMax):
         error = J2 - I
         SSD.append(np.sum(error**2))
@@ -90,27 +92,134 @@ def rotation_recalage(I, J, iterMax, lamb):
     plt.figure()
     plt.plot(SSD)
     plt.show()
-    return J2
+    return J2, SSD
+
+def iconique_recalage(I, J, iterMax, lamb):
+    """
+
+    :param I:
+    :param J:
+    :param iterMax:
+    :param lamb:
+    :return:
+    """
+
+    SSD = []
+    u = np.array([0, 0])
+    theta = 0
+    J_derivate_x = np.gradient(J, axis=0)
+    J_derivate_y = np.gradient(J, axis=1)
+    x, y = np.meshgrid(range(I.shape[0]), range(I.shape[1]))
+    J2 = rotation_scipy(J, theta)
+    J2 = translation_scipy(J2, u)
+    lamb_trans = lamb * 100000
+    for i in range(1, iterMax):
+        error = J2 - I
+
+        SSD.append(np.sum(error**2))
+
+        J2_derivate_xp_rotation = rotation_scipy(J_derivate_x, theta)
+        J2_derivate_yp_rotation = rotation_scipy(J_derivate_y, theta)
+        res1 = J2_derivate_xp_rotation * ((- x * np.sin(theta)) - (y * np.cos(theta)))
+        res2 = J2_derivate_yp_rotation * ((x * np.cos(theta)) - (y * np.sin(theta)))
+        ssd_d = 2 * np.sum((error*(res1 + res2)))
+        theta = theta - (lamb * ssd_d)
+
+        J2_derivate_xp_translation = translation_scipy(J_derivate_x, u)
+        J2_derivate_yp_translation = translation_scipy(J_derivate_y, u)
+        ssd_p = 2 * np.sum(error*J2_derivate_xp_translation)
+        ssd_q = 2 * np.sum(error*J2_derivate_yp_translation)
+        u = u + [(lamb_trans) * ssd_p, (lamb_trans) * ssd_q]
+
+        J2 = rotation_scipy(J, theta)
+        J2 = translation_scipy(J2, u)
+
+    plt.figure()
+    plt.plot(SSD)
+    plt.show()
+    return J2, SSD
+
+
+def afficher_resultats(img_init, img_to_move, img_recale, SSD_curve):
+    """
+
+    :param img_init:
+    :param img_to_move:
+    :param img_recale:
+    :param SSD_curve:
+    :return:
+    """
+
+    ax1 = plt.subplot2grid((2, 4), (0, 0), colspan=1)
+    ax1.axis('off')
+    ax1.set_title('Image de base')
+    ax1.imshow(img_init)
+
+    ax2 = plt.subplot2grid((2, 4), (0, 1), colspan=1)
+    ax2.axis('off')
+    ax2.set_title('Image à recaler')
+    ax2.imshow(img_to_move)
+
+    ax3 = plt.subplot2grid((2, 4), (0, 2), colspan=1)
+    ax3.axis('off')
+    ax3.set_title('Image recalée')
+    ax3.imshow(img_recale)
+
+    ax4 = plt.subplot2grid((2, 4), (0, 3), colspan=1)
+    ax4.axis('off')
+    ax4.set_title('Différence des images')
+    ax4.imshow(img_init-img_recale)
+
+    ax5 = plt.subplot2grid((2, 4), (1, 0), colspan=4)
+    ax5.set_title('Courbe SSD')
+    ax5.plot(SSD_curve)
+
+    plt.show()
 
 
 if __name__ == '__main__':
-    I = np.array(Image.open('Data/BrainMRI_3.jpg'))
-    # J = np.array(Image.open('Data/BrainMRI_4.jpg'))
-    J = rotation_scipy(I, np.deg2rad(15))
-    I = ndimage.gaussian_filter((I / np.amax(I)), sigma=1)
-    J = ndimage.gaussian_filter((J / np.amax(J)), sigma=1)
-    # J = rotation(I, 5)
-    # J2 = lucas_kanade_recalage(I, J, 1000)
-    # J2 = gradient_descent_translation_recalage(I, J, 10000, lamb=0.1)
-    J2 = rotation_recalage(I, J, 5000, lamb=0.00000001)
-    plt.figure()
-    plt.imshow(J2)
-    plt.title("image recalée")
-    plt.figure()
-    plt.imshow(I-J2)
-    plt.figure()
-    plt.title("image de base")
-    plt.imshow(I)
-    plt.colorbar()
-    plt.show()
+
+    def test_lucas_kanade_recalage():
+        I = np.array(Image.open('Data/BrainMRI_1.jpg'))
+        I = ndimage.gaussian_filter((I / np.amax(I)), sigma=1)
+        J = np.array(Image.open('Data/BrainMRI_2.jpg'))
+        J = ndimage.gaussian_filter((J / np.amax(J)), sigma=1)
+        lucas_kanade, ssd = lucas_kanade_recalage(I, J, 70)
+        afficher_resultats(I, J, lucas_kanade, ssd)
+
+    # test_lucas_kanade_recalage()
+
+
+    def test_translation_recalage():
+        I = np.array(Image.open('Data/BrainMRI_1.jpg'))
+        I = ndimage.gaussian_filter((I / np.amax(I)), sigma=1)
+        J = np.array(Image.open('Data/BrainMRI_2.jpg'))
+        J = ndimage.gaussian_filter((J / np.amax(J)), sigma=1)
+        translated, ssd = translation_recalage(I, J, 10000, lamb=0.1)
+        afficher_resultats(I, J, translated, ssd)
+
+    # test_translation_recalage()
+
+
+    def test_rotation_recalage():
+        I = np.array(Image.open('Data/BrainMRI_3.jpg'))
+        I = ndimage.gaussian_filter((I / np.amax(I)), sigma=1)
+        J = np.array(Image.open('Data/BrainMRI_4.jpg'))
+        J = ndimage.gaussian_filter((J / np.amax(J)), sigma=1)
+        translated, ssd = rotation_recalage(I, J, 5000, lamb=0.00000001)
+        afficher_resultats(I, J, translated, ssd)
+
+    # test_translation_recalage()
+
+    def test_iconique_recalage():
+        I = np.array(Image.open('Data/BrainMRI_1.jpg'))
+        I = ndimage.gaussian_filter((I / np.amax(I)), sigma=1)
+        J = np.array(Image.open('Data/BrainMRI_4.jpg'))
+        J = ndimage.gaussian_filter((J / np.amax(J)), sigma=1)
+        iconique, ssd = iconique_recalage(I, J, 5000, lamb=0.00000001)
+        afficher_resultats(I, J, iconique, ssd)
+
+    test_iconique_recalage()
+
+
 
