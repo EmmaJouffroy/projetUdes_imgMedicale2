@@ -42,5 +42,6 @@ La question 2 s'intéresse à différents moyens de transformer des volumes (ici
 ```sh
 pipenv run python tp2.py 3 similitude 1.5 90 0 0 5 5 5
 ```
-<img src="https://github.com/EmmaJouffroy/projetUdes_imgMedicale2/blob/master/Resultats/Transformation/transfo.png" alt="drawing" width="300"/>
-
+<div class="center-text">
+<img src="https://github.com/EmmaJouffroy/projetUdes_imgMedicale2/blob/master/Resultats/Transformation/transfo.png" alt="drawing" width="500"/>
+</div>
