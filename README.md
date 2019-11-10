@@ -34,7 +34,7 @@ Exemple d'utilisation:
 ```sh
 pipenv run python tp2.py 1
 ```
-![alt text](https://github.com/EmmaJouffroy/RegressionLineaire/)
+![alt text](https://github.com/EmmaJouffroy/projetUdes_imgMedicale2/blob/master/Resultats/Histogramme/histogrammes.png)
 
 ```sh
 pipenv run python tp2.py 3 similitude 1.5 90 0 0 5 5 5
