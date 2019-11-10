@@ -48,6 +48,6 @@ pipenv run python tp2.py 3 similitude 1.5 90 0 0 5 5 5
 
 # Auteurs
 
-* **Emma Jouffroy** - [PurpleBooth](https://github.com/EmmaJouffroy)
-* **Maxime Adolphe** - [PurpleBooth](https://github.com/madolphe)
+* **Emma Jouffroy** - [Emma Jouffroy github](https://github.com/EmmaJouffroy)
+* **Maxime Adolphe** - [Maxime Adolphe github](https://github.com/madolphe)
 
