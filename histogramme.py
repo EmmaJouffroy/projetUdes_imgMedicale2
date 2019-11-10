@@ -146,7 +146,9 @@ def test_joint_histogramme(nbr):
     else:
         I = np.array(Image.open('Data/I'+str(nbr)+'.jpg'))
         J = np.array(Image.open('Data/J'+str(nbr)+'.jpg'))
+
     hist = jointHist(I, J, 50)
+    assert np.sum(hist) == I.shape[0]*I.shape[1]
     norm = LogNorm(1, np.amax(hist), clip='True')
     plt.imshow(hist+1, norm=norm, cmap='jet', origin="lower")
     plt.colorbar()
@@ -172,5 +174,6 @@ if __name__ == '__main__':
     """
     L'ensemble des fonctions ont été utilisé dans la phase de test et de rédaction du manuscrit du projet 
     """
-    # test_joint_histogramme
+
+    test_joint_histogramme(1)
     # test_afficher_histogramme()
