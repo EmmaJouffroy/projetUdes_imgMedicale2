@@ -94,7 +94,7 @@ def rotation_recalage(I, J, iterMax, lamb):
     return J2, SSD
 
 
-def iconique_recalage(I, J, iterMax, lamb):
+def iconique_recalage(I, J, iterMax, lamb, seuil=0.001):
     """
     Méthode de recalage par rotation ET translation utilisant la descente de gradient.
     :param I:
@@ -103,7 +103,7 @@ def iconique_recalage(I, J, iterMax, lamb):
     :param lamb:
     :return:
     """
-    SSD = []
+    SSD = [0, 0]
     u = np.array([0, 0])
     theta = 0
     J_derivate_x = np.gradient(J, axis=0)
@@ -111,7 +111,7 @@ def iconique_recalage(I, J, iterMax, lamb):
     x, y = np.meshgrid(range(I.shape[0]), range(I.shape[1]))
     J2 = rotation_scipy(J, theta)
     J2 = translation_scipy(J2, u)
-    lamb_trans = lamb * 100000
+    lamb_trans = lamb * 1000000
     for i in range(1, iterMax):
         error = J2 - I
 
@@ -129,14 +129,22 @@ def iconique_recalage(I, J, iterMax, lamb):
         ssd_p = 2 * np.sum(error*J2_derivate_xp_translation)
         ssd_q = 2 * np.sum(error*J2_derivate_yp_translation)
         u = u + [(lamb_trans) * ssd_p, (lamb_trans) * ssd_q]
-
+        print(theta, u)
         J2 = rotation_scipy(J, theta)
         J2 = translation_scipy(J2, u)
+
+        if (abs(SSD[-1]-SSD[-3])/2) < seuil:
+            # Si l'approximation de la dérivée est en dessous du seuil fixé
+            # On arrete la descente de gradient
+            plt.figure()
+            plt.plot(SSD)
+            plt.show()
+            return J2, SSD[2:]
 
     plt.figure()
     plt.plot(SSD)
     plt.show()
-    return J2, SSD
+    return J2, SSD[2:]
 
 
 def afficher_resultats(img_init, img_to_move, img_recale, SSD_curve):
@@ -205,7 +213,7 @@ def test_rotation_recalage(itermax=10000, lamb=0.00000001):
 def test_iconique_recalage(itermax=10000, lamb=0.0000000001):
     I = np.array(Image.open('Data/BrainMRI_1.jpg'))
     I = ndimage.gaussian_filter((I / np.amax(I)), sigma=1)
-    J = np.array(Image.open('Data/BrainMRI_2.jpg'))
+    J = np.array(Image.open('Data/BrainMRI_4.jpg'))
     J = ndimage.gaussian_filter((J / np.amax(J)), sigma=1)
     iconique, ssd = iconique_recalage(I, J, itermax, lamb=lamb)
     afficher_resultats(I, J, iconique, ssd)
@@ -216,7 +224,7 @@ if __name__ == '__main__':
     # test_lucas_kanade_recalage()
     # test_translation_recalage()
     # test_rotation_recalage()
-    # test_iconique_recalage()
+    # test_iconique_recalage(10000, 0.0000000001)
 
 
 
