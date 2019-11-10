@@ -232,7 +232,7 @@ if __name__ == '__main__':
     pass
     # test_translation_bilineaire()
     # test_rotation_nn()
-    # test_rotation_scipy()
+    # test_rotation_scipy(20)
     # test_translation_scipy()
 
 
