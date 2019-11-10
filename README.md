@@ -44,4 +44,5 @@ pipenv run python tp2.py 3 similitude 1.5 90 0 0 5 5 5
 ```
 ![alt text](https://github.com/EmmaJouffroy/projetUdes_imgMedicale2/blob/master/Resultats/Transformation/transfo.png
 )
+<img src="https://github.com/EmmaJouffroy/projetUdes_imgMedicale2/blob/master/Resultats/Transformation/transfo.png" alt="drawing" width="50"/>
 
