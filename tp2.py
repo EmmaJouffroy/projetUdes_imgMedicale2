@@ -8,7 +8,7 @@ from recalage import test_lucas_kanade_recalage, test_translation_recalage, test
 import sys
 
 if __name__ == '__main__':
-    if len(sys.argv) > 0:
+    if len(sys.argv) > 1:
         if int(sys.argv[1]) == 1:
             # lancer construction histogramme
             if len(sys.argv) == 2:
