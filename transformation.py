@@ -16,6 +16,7 @@ M3 = np.array([[0.7182, -1.3727, -0.5660, 1.8115],
                [-0.6426, -1.7985, -1.6285, 0.7404],
                [0, 0, 0, 1.0000]])
 
+
 def trans_rigide(theta, omega, phi, p, q, r, mesh):
     """
     Méthode permettant une tranlation et une rotation d'un volume 3D
