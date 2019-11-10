@@ -54,7 +54,7 @@ def interpol_bilin(i, j, img):
 def translation(img, p, q, type="NN"):
     """
     Méthode non utilisée pour le recalage, dévéloppement "à la main" d'une translation utilisant les méthodes d'inter-
-    polation développé ci-avant.
+    polation développées ci-avant.
     Note: Pour éviter d'avoir une image présentant des "trous", on parcourt la grille de l'image d'arrivée (et on
     revient à l'image de départ)
     :param img:
@@ -82,6 +82,16 @@ def translation(img, p, q, type="NN"):
 
 
 def rotation(img, theta, type="NN"):
+    """
+    Méthode non utilisée pour le recalage, dévéloppement "à la main" d'une rotation utilisant les méthodes d'inter-
+    polation développées ci-avant.
+    Note: Pour éviter d'avoir une image présentant des "trous", on parcourt la grille de l'image d'arrivée (et on
+    revient à l'image de départ)
+    :param img:
+    :param theta:
+    :param type:
+    :return:
+    """
     new_img = np.zeros((img.shape[0], img.shape[1]))
     theta = (theta*math.pi)/180
     for i in range(img.shape[0]):
@@ -104,6 +114,7 @@ def rotation(img, theta, type="NN"):
 
 def rotation_scipy(img, theta_rad):
     """
+    Méthode utilisant scipy pour la rotation. Utilisé dans le recalage car apporte un énorme gain de temps.
     :param img:
     :param theta_rad: Toujours fournir un angle en radian!!!
     :return:
@@ -118,7 +129,7 @@ def rotation_scipy(img, theta_rad):
 
 def translation_scipy(img, t):
     """
-
+    Méthode utilisant scipy pour la translation. Utilisé dans le recalage car apporte un énorme gain de temps.
     :param img:
     :param t:
     :return:
@@ -132,6 +143,12 @@ def translation_scipy(img, t):
 
 
 def test_translation_bilineaire(p, q):
+    """
+    Méthode de test, utilisé pour démonstration.
+    :param p:
+    :param q:
+    :return:
+    """
     img = np.array(Image.open('Data/BrainMRI_2.jpg'))
 
     fig, axes = plt.subplots(1, 2)
@@ -148,6 +165,11 @@ def test_translation_bilineaire(p, q):
 
 
 def test_rotation_nn(theta):
+    """
+    Méthode de test, utilisé pour démonstration.
+    :param theta:
+    :return:
+    """
     img = np.array(Image.open('Data/BrainMRI_2.jpg'))
 
     fig, axes = plt.subplots(1, 2)
@@ -164,6 +186,11 @@ def test_rotation_nn(theta):
 
 
 def test_rotation_scipy(theta):
+    """
+    Méthode de test, utilisé pour démonstration.
+    :param theta:
+    :return:
+    """
     img = np.array(Image.open('Data/BrainMRI_2.jpg'))
 
     fig, axes = plt.subplots(1, 2)
@@ -180,6 +207,12 @@ def test_rotation_scipy(theta):
 
 
 def test_translation_scipy(p, q):
+    """
+    Méthode de test, utilisé pour démonstration.
+    :param p:
+    :param q:
+    :return:
+    """
     img = np.array(Image.open('Data/BrainMRI_2.jpg'))
 
     fig, axes = plt.subplots(1, 2)
