@@ -146,7 +146,6 @@ def test_joint_histogramme(nbr):
     else:
         I = np.array(Image.open('Data/I'+str(nbr)+'.jpg'))
         J = np.array(Image.open('Data/J'+str(nbr)+'.jpg'))
-
     hist = jointHist(I, J, 50)
     assert np.sum(hist) == I.shape[0]*I.shape[1]
     norm = LogNorm(1, np.amax(hist), clip='True')
