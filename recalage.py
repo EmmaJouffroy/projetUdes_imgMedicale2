@@ -1,17 +1,16 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from PIL import Image
-from transformation_interpolations import translation_scipy, rotation_scipy, translation
+from transformation_interpolations import translation_scipy, rotation_scipy
 from scipy import ndimage
-import math
 
 
 def lucas_kanade_recalage(I, J, iterMax):
     """
-
-    :param I:
-    :param J:
-    :param iterMax:
+    Méthode de recalage utilisant la formule de lucas-kanade
+    :param I: img1
+    :param J: img a recaler
+    :param iterMax: nombre d'itérations
     :return:
     """
     SSD = []
@@ -36,7 +35,7 @@ def lucas_kanade_recalage(I, J, iterMax):
 
 def translation_recalage(I, J, iterMax, lamb):
     """
-
+    Méthode de recalage par translation utilisant l'algorithme descente de gradient.
     :param I:
     :param J:
     :param iterMax:
@@ -65,7 +64,7 @@ def translation_recalage(I, J, iterMax, lamb):
 
 def rotation_recalage(I, J, iterMax, lamb):
     """
-
+    Méthode de recalage par rotation utilisant l'algorithme descente de gradient.
     :param I:
     :param J:
     :param iterMax:
@@ -96,14 +95,13 @@ def rotation_recalage(I, J, iterMax, lamb):
 
 def iconique_recalage(I, J, iterMax, lamb):
     """
-
+    Méthode de recalage par rotation ET translation utilisant la descente de gradient.
     :param I:
     :param J:
     :param iterMax:
     :param lamb:
     :return:
     """
-
     SSD = []
     u = np.array([0, 0])
     theta = 0
