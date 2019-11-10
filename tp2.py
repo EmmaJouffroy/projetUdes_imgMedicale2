@@ -1,7 +1,8 @@
 from histogramme import test_afficher_histogramme, test_joint_histogramme
 from transformation import *
 from similarite import test_afficher_similarites
-from transformation_interpolations import *
+from transformation_interpolations import test_rotation_scipy, test_rotation_nn, test_translation_bilineaire, \
+     test_translation_scipy
 import sys
 
 
@@ -64,4 +65,49 @@ if __name__ == '__main__':
             print("Pour lancer la question 3, suivre l'usage prévu pour chaque sous question")
             print("ex : python tp2.py 3 similitude 1.5 90 0 0 5 5 5")
     elif int(sys.argv[1]) == 4:
-        print('allo')
+        # On test tout d'abord si l'on souhaite utiliser ou non scipy
+        if len(sys.argv) > 2:
+            if int(sys.argv[2]) == 1:
+                if len(sys.argv) > 3:
+                    if sys.argv[3] == "rotation":
+                        if len(sys.argv) > 4:
+                            test_rotation_scipy(float(sys.argv[4]))
+                        else:
+                            print("Pour une rotation avec scipy ajouter un angle en degres")
+                            print("ex python tp2.py 4 1 rotation 45")
+                    elif sys.argv[3] == "translation":
+                        if len(sys.argv) > 5:
+                            test_translation_scipy(float(sys.argv[4]), float(sys.argv[5]))
+                        else:
+                            print("Pour une translation avec scipy ajouter deux elements de translation x et y")
+                            print("ex python tp2.py 4 1 translation 5 5")
+                    else:
+                        print("Pour une transformation avec scipy ajouter type de transformation")
+                        print("ex python tp2.py 4 1 rotation 45")
+            elif int(sys.argv[2]) == 0:
+                if len(sys.argv) > 3:
+                    if sys.argv[3] == "rotation":
+                        if len(sys.argv) > 4:
+                            test_rotation_scipy(float(sys.argv[4]))
+                        else:
+                            print("Pour une rotation sans scipy ajouter un angle en degres")
+                            print("ex python tp2.py 4 0 rotation 45")
+                    elif sys.argv[3] == "translation":
+                        if len(sys.argv) > 5:
+                            test_translation_scipy(float(sys.argv[4]), float(sys.argv[5]))
+                        else:
+                            print("Pour une translation sans scipy ajouter deux elements de translation x et y")
+                            print("ex python tp2.py 4 0 translation 5 5")
+                    else:
+                        print("Pour une transformation sans scipy ajouter type de transformation")
+                        print("ex python tp2.py 4 0 rotation 45")
+            else:
+                print("Pour lancer la question 4, suivre l'usage suivant:")
+                print("utilisation de scypi 1 avec, 0 sans")
+                print("ex python tp2.py 4 1 rotation 45")
+        else:
+            print("Pour lancer la question 4, suivre l'usage suivant:")
+            print("python tp2.py 4 scipy typeTransformation paramsTransform")
+            print("ex python tp2.py 4 1 rotation 45")
+    elif int(sys.argv[1]) == 5:
+        print("allo")

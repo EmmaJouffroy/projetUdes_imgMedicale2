@@ -131,75 +131,76 @@ def translation_scipy(img, t):
     return translated
 
 
+def test_translation_bilineaire(p, q):
+    img = np.array(Image.open('Data/BrainMRI_2.jpg'))
+
+    fig, axes = plt.subplots(1, 2)
+    fig.suptitle('Translation et interpolation bilinéaire')
+
+    axes[0].axis('off')
+    axes[0].set_title("Image de base")
+    axes[0].imshow(img)
+
+    axes[1].axis('off')
+    axes[1].set_title("Image translatée et interpolée")
+    axes[1].imshow(translation(img, p, q, type="Bilineaire"))
+    plt.show()
+
+
+def test_rotation_nn(theta):
+    img = np.array(Image.open('Data/BrainMRI_2.jpg'))
+
+    fig, axes = plt.subplots(1, 2)
+    fig.suptitle('Rotation et interpolation nn')
+
+    axes[0].axis('off')
+    axes[0].set_title("Image de base")
+    axes[0].imshow(img)
+
+    axes[1].axis('off')
+    axes[1].set_title("Image rotatée et interpolée")
+    axes[1].imshow(rotation(img, theta, type="NN"))
+    plt.show()
+
+
+def test_rotation_scipy(theta):
+    img = np.array(Image.open('Data/BrainMRI_2.jpg'))
+
+    fig, axes = plt.subplots(1, 2)
+    fig.suptitle('Rotation scipy')
+
+    axes[0].axis('off')
+    axes[0].set_title("Image de base")
+    axes[0].imshow(img)
+
+    axes[1].axis('off')
+    axes[1].set_title("Image rotatée avec scipy")
+    axes[1].imshow(rotation_scipy(img, np.deg2rad(-theta)))
+    plt.show()
+
+
+def test_translation_scipy(p, q):
+    img = np.array(Image.open('Data/BrainMRI_2.jpg'))
+
+    fig, axes = plt.subplots(1, 2)
+    fig.suptitle('Translation scipy')
+
+    axes[0].axis('off')
+    axes[0].set_title("Image de base")
+    axes[0].imshow(img)
+
+    axes[1].axis('off')
+    axes[1].set_title("Image translatée avec scipy")
+    axes[1].imshow(translation_scipy(img, [p, q]))
+    plt.show()
+
+
 if __name__ == '__main__':
-
-    def test_translation_bilineaire():
-        img = np.array(Image.open('Data/BrainMRI_2.jpg'))
-
-        fig, axes = plt.subplots(1, 2)
-        fig.suptitle('Translation et interpolation bilinéaire')
-
-        axes[0].axis('off')
-        axes[0].set_title("Image de base")
-        axes[0].imshow(img)
-
-        axes[1].axis('off')
-        axes[1].set_title("Image translatée et interpolée")
-        axes[1].imshow(translation(img, 30, 50, type="Bilineaire"))
-        plt.show()
-
+    pass
     # test_translation_bilineaire()
-
-    def test_rotation_nn():
-        img = np.array(Image.open('Data/BrainMRI_2.jpg'))
-
-        fig, axes = plt.subplots(1, 2)
-        fig.suptitle('Rotation et interpolation nn')
-
-        axes[0].axis('off')
-        axes[0].set_title("Image de base")
-        axes[0].imshow(img)
-
-        axes[1].axis('off')
-        axes[1].set_title("Image rotatée et interpolée")
-        axes[1].imshow(rotation(img, 15, type="NN"))
-        plt.show()
-
     # test_rotation_nn()
-
-    def test_rotation_scipy():
-        img = np.array(Image.open('Data/BrainMRI_2.jpg'))
-
-        fig, axes = plt.subplots(1, 2)
-        fig.suptitle('Rotation scipy')
-
-        axes[0].axis('off')
-        axes[0].set_title("Image de base")
-        axes[0].imshow(img)
-
-        axes[1].axis('off')
-        axes[1].set_title("Image rotatée avec scipy")
-        axes[1].imshow(rotation_scipy(img, np.deg2rad(-15)))
-        plt.show()
-
     # test_rotation_scipy()
-
-    def test_translation_scipy():
-        img = np.array(Image.open('Data/BrainMRI_2.jpg'))
-
-        fig, axes = plt.subplots(1, 2)
-        fig.suptitle('Translation scipy')
-
-        axes[0].axis('off')
-        axes[0].set_title("Image de base")
-        axes[0].imshow(img)
-
-        axes[1].axis('off')
-        axes[1].set_title("Image translatée avec scipy")
-        axes[1].imshow(translation_scipy(img, [20, 40]))
-        plt.show()
-
-    test_translation_scipy()
+    # test_translation_scipy()
 
 
 
