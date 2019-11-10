@@ -17,7 +17,9 @@ def lucas_kanade_recalage(I, J, iterMax):
     u = np.array([0, 0])
     J2 = ndimage.interpolation.shift(J, u)
     for i in range(0, iterMax):
+        # On calcule l'erreur entre l'image transformée et l'image sur laquelle recalée
         SSD.append(np.sum((J2-I)**2))
+        # On calcule tous les éléments pour appliquer la formule de Lucas-Kanade
         J2x = np.gradient(J2, axis=0)
         J2y= np.gradient(J2, axis=1)
         Jt = J2 - I
@@ -28,7 +30,9 @@ def lucas_kanade_recalage(I, J, iterMax):
         J2yt = np.sum(J2y * Jt)
         M = np.array(([J2x_ss, J2yx], [J2yx, J2y_ss]))
         b = np.array(([J2xt], [J2yt]))
+        # On modifie notre vecteur de translation:
         u = u + np.squeeze(np.linalg.solve(M, b), axis=1)
+        # On translate l'image initiale avec ce nouveau vecteur
         J2 = ndimage.interpolation.shift(J, u)
     return J2, SSD
 
@@ -47,18 +51,19 @@ def translation_recalage(I, J, iterMax, lamb):
     J2 = translation_scipy(J, u)
     J_derivate_x = np.gradient(J, axis=1)
     J_derivate_y = np.gradient(J, axis=0)
-    evol_lamb = [lamb]
     for i in range(1, iterMax):
         print(u)
         error = J2 - I
+        # Sauvegarde de l'erreur:
         SSD.append((np.sum(error**2)))
+        # Calcul des dérivés "translatés"
         J2_derivate_xp = translation_scipy(J_derivate_x, u)
         J2_derivate_yp = translation_scipy(J_derivate_y, u)
         ssd_p = 2 * np.sum(error*J2_derivate_xp)
         ssd_q = 2 * np.sum(error*J2_derivate_yp)
+        # Mise à jour du vecteur de translation selon la formule de la descente de gradient
         u = u + [lamb * ssd_p, lamb * ssd_q]
         J2 = translation_scipy(J, u)
-        evol_lamb.append(lamb/i)
     return J2, SSD
 
 
@@ -79,11 +84,15 @@ def rotation_recalage(I, J, iterMax, lamb):
     x, y = np.meshgrid(range(I.shape[0]), range(I.shape[1]))
     for i in range(1, iterMax):
         error = J2 - I
+        # Sauvegarde de l'erreur :
         SSD.append(np.sum(error**2))
+        # Calcul des dérivés "rotatés"
         J2_derivate_xp = rotation_scipy(J_derivate_x, theta)
         J2_derivate_yp = rotation_scipy(J_derivate_y, theta)
+        # Calcul des élèments "sortant de la dérivée de l'image par théta"
         res1 = J2_derivate_xp * ((- x * np.sin(theta)) - (y * np.cos(theta)))
         res2 = J2_derivate_yp * ((x * np.cos(theta)) - (y * np.sin(theta)))
+        # Calcul finale de la dérivée par theta de l'erreur
         ssd_d = 2 * np.sum((error*(res1 + res2)))
         theta = theta - (lamb * ssd_d)
         J2 = rotation_scipy(J, theta)
@@ -111,28 +120,33 @@ def iconique_recalage(I, J, iterMax, lamb, seuil=0.001):
     x, y = np.meshgrid(range(I.shape[0]), range(I.shape[1]))
     J2 = rotation_scipy(J, theta)
     J2 = translation_scipy(J2, u)
+    # Les "coefficients d'apprentissage" différent, on pourrait les fixer indépendament les uns des autres
+    # Mais la méthode suivante fonctionne aussi:
     lamb_trans = lamb * 1000000
     for i in range(1, iterMax):
         error = J2 - I
-
+        # Sauvegarde de l'erreur:
         SSD.append(np.sum(error**2))
-
+        #Calcul des dérivés pour la rotation
         J2_derivate_xp_rotation = rotation_scipy(J_derivate_x, theta)
         J2_derivate_yp_rotation = rotation_scipy(J_derivate_y, theta)
         res1 = J2_derivate_xp_rotation * ((- x * np.sin(theta)) - (y * np.cos(theta)))
         res2 = J2_derivate_yp_rotation * ((x * np.cos(theta)) - (y * np.sin(theta)))
         ssd_d = 2 * np.sum((error*(res1 + res2)))
+        # Mise à jour de l'angle de rotation
         theta = theta - (lamb * ssd_d)
-
+        # Calcul des dérivés pour la translation
         J2_derivate_xp_translation = translation_scipy(J_derivate_x, u)
         J2_derivate_yp_translation = translation_scipy(J_derivate_y, u)
         ssd_p = 2 * np.sum(error*J2_derivate_xp_translation)
         ssd_q = 2 * np.sum(error*J2_derivate_yp_translation)
+        # Mise à jour du vecteur de translation:
         u = u + [(lamb_trans) * ssd_p, (lamb_trans) * ssd_q]
         print(theta, u)
+        # Transformation selon u et theta de l'image:
         J2 = rotation_scipy(J, theta)
         J2 = translation_scipy(J2, u)
-
+        # Utilisation d'un critère
         if (abs(SSD[-1]-SSD[-3])/2) < seuil:
             # Si l'approximation de la dérivée est en dessous du seuil fixé
             # On arrete la descente de gradient

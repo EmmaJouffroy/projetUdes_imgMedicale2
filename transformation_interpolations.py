@@ -136,6 +136,8 @@ def translation_scipy(img, t):
     """
     dims = img.shape
     x, y = np.meshgrid(np.arange(dims[1]), np.arange(dims[0]))
+    # Pour avoir un déplacement en x et en y "positif", il est important d'effectuer l'opposé sur les nouvelles
+    # coordonnées (fonctionnement de map_coordinates)
     xp = x - t[0]
     yp = y - t[1]
     translated = ndimage.map_coordinates(img, [yp, xp], mode='constant', cval=0, order=3)

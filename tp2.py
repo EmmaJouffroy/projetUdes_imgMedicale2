@@ -1,13 +1,15 @@
 from histogramme import test_afficher_histogramme, test_joint_histogramme
 from transformation import *
 from similarite import test_afficher_similarites
-from transformation_interpolations import test_rotation_scipy, test_rotation_nn, test_translation_bilineaire, \
-     test_translation_scipy
+from transformation_interpolations import test_rotation_scipy,  test_translation_scipy
 from recalage import test_lucas_kanade_recalage, test_translation_recalage, test_rotation_recalage, \
     test_iconique_recalage
 import sys
 
 if __name__ == '__main__':
+    """
+    Script permettant d'appeler chacun des fichiers depuis la console
+    """
     if len(sys.argv) > 1:
         if int(sys.argv[1]) == 1:
             # lancer construction histogramme

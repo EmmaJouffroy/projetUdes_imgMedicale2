@@ -23,9 +23,14 @@ def jointHist(img1, img2, bin):
     # de chaque image:
     for i in range(0, img1.shape[0]):
         for j in range(0, img1.shape[1]):
+            # On détermine la classe de l'intensité du pixel observé pour l'image1
             bin_i = int(img1[i, j] // nb_val_per_bin)
             if bin_i >= bin:
+                # Si on sort des classes disponibles on met l'intensité dans la derniere classe
+                # En effet si 255 intensités possibles, pour 10 classes, on aura la 10eme classe
+                # possedant des intensité de 225 à 255 (classe sur-représentée donc)
                 bin_i = bin - 1
+            # De même pour l'image 2:
             bin_j = int(img2[i, j] // nb_val_per_bin)
             if bin_j >= bin:
                 bin_j = bin - 1
@@ -141,12 +146,14 @@ def afficher_histogrammes_joints(images_I, images_J, hist_joint):
 
 def test_joint_histogramme(nbr):
     if nbr == 1:
+        # Petite distinction car seul le couple I1/J1 est au format png
         I = np.array(Image.open('Data/I'+str(nbr)+'.png'))
         J = np.array(Image.open('Data/J'+str(nbr)+'.png'))
     else:
         I = np.array(Image.open('Data/I'+str(nbr)+'.jpg'))
         J = np.array(Image.open('Data/J'+str(nbr)+'.jpg'))
     hist = jointHist(I, J, 50)
+    # Test vérfiant la question 1b
     assert np.sum(hist) == I.shape[0]*I.shape[1]
     norm = LogNorm(1, np.amax(hist), clip='True')
     plt.imshow(hist+1, norm=norm, cmap='jet', origin="lower")
@@ -173,6 +180,6 @@ if __name__ == '__main__':
     """
     L'ensemble des fonctions ont été utilisé dans la phase de test et de rédaction du manuscrit du projet 
     """
-
-    test_joint_histogramme(1)
+    pass
+    # test_joint_histogramme(1)
     # test_afficher_histogramme()

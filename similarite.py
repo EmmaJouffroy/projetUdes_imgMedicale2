@@ -43,7 +43,9 @@ def IM(hist):
     py = np.sum(hist, axis=0)
     py = np.expand_dims(py, axis=1)
     px_py = np.dot(px.T, py.T)
+    # Fonctionnalité "geniale" de numpy pour ne pas conserver les indices des 0 de l'array hist:
     nzs = hist > 0
+    # Autre fonctionnalité géniale pour ne pas utiliser de boucle:
     mutual_info = np.sum(hist[nzs] * np.log(hist[nzs] / px_py[nzs]))
     return mutual_info
 

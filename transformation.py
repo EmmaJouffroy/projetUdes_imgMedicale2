@@ -3,6 +3,8 @@ import matplotlib.pyplot as plt
 import math
 from mpl_toolkits.mplot3d import axes3d, Axes3D
 
+
+# Matrices pour la question 3d
 M1 = np.array([[0.9045, -0.3847, -0.1840, 10.0000],
                [0.2939, 0.8750, -0.3847, 10.0000],
                [0.3090, 0.2939, 0.9045, 10.0000],
@@ -33,6 +35,7 @@ def trans_rigide(theta, omega, phi, p, q, r, mesh):
     omega = (omega * math.pi) / 180
     phi = (phi * math.pi) / 180
     t = np.array((p, q, r, 1))
+    # Création des matrices de rotation
     rotation_x = np.array(([1, 0, 0, 0], [0, math.cos(theta), -math.sin(theta), 0],
                            [0, math.sin(theta), math.cos(theta), 0], [0, 0, 0, 1]))
 
@@ -40,8 +43,10 @@ def trans_rigide(theta, omega, phi, p, q, r, mesh):
                            [math.sin(omega), 0, math.cos(omega), 0], [0, 0, 0, 1]))
     rotation_z = np.array(([math.cos(phi),  -math.sin(phi), 0, 0], [math.sin(phi), math.cos(phi), 0, 0],
                            [0, 0, 1, 0], [0, 0, 0, 1]))
+    # "La rotation selon les 3 angles est en fait la composition de 3 rotations différentes (selon 3 axes différents)"
     trans_rot_x_y = np.dot(rotation_x, rotation_y)
     trans_rot_x_y_z = np.dot(trans_rot_x_y, rotation_z)
+    # On applique la rotation sur notre volume:
     transformed1 = np.dot(trans_rot_x_y_z, mesh)
     transformed1 = transformed1 + t.T
     return transformed1
@@ -60,6 +65,7 @@ def similitude(s, theta, omega, phi, p, q, r, mesh):
     :param mesh: volume translaté et rotaté
     :return: Le volume resultant de l'opération
     """
+    # La transformation similitude est une transformation rigide sur laquelle on applique un redimensionnement :
     rotation_matrix = trans_rigide(theta, omega, phi, 0, 0, 0, mesh)
     t = np.array((p, q, r, 1))
     transformed1 = s * rotation_matrix + t.T
@@ -67,6 +73,16 @@ def similitude(s, theta, omega, phi, p, q, r, mesh):
 
 
 def test_transrigide(theta, omega, phi, p, q, r):
+    """
+    Méthode de test et d'affichage des résultats de trans_rigide
+    :param theta:
+    :param omega:
+    :param phi:
+    :param p:
+    :param q:
+    :param r:
+    :return:
+    """
     x = np.linspace(0, 20, 20)
     y = np.linspace(0, 10, 10)
     z = np.linspace(0, 2, 2)
@@ -88,6 +104,18 @@ def test_transrigide(theta, omega, phi, p, q, r):
 
 
 def test_similitude(s, theta, omega, phi, p, q, r, m=0):
+    """
+    Méthode de test et d'affichage des résultats de similitude
+    :param s:
+    :param theta:
+    :param omega:
+    :param phi:
+    :param p:
+    :param q:
+    :param r:
+    :param m:
+    :return:
+    """
     x = np.linspace(0, 20, 20)
     y = np.linspace(0, 10, 10)
     z = np.linspace(0, 2, 2)
