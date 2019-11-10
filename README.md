@@ -31,11 +31,14 @@ python tp2.py 1
 # Exemple : 
 
 Exemple d'utilisation:
+
+La question 1 est de générer les histogrammes conjoints de plusieurs couples d'images: 
 ```sh
 pipenv run python tp2.py 1
 ```
 ![alt text](https://github.com/EmmaJouffroy/projetUdes_imgMedicale2/blob/master/Resultats/Histogramme/histogrammes.png)
 
+La question 2 s'intéresse à différents moyens de transformer des volumes (ici c'est une transformation similitude):
 ```sh
 pipenv run python tp2.py 3 similitude 1.5 90 0 0 5 5 5
 ```
