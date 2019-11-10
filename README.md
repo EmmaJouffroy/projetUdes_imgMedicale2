@@ -45,3 +45,9 @@ pipenv run python tp2.py 3 similitude 1.5 90 0 0 5 5 5
 <p align="center">
 <img src="https://github.com/EmmaJouffroy/projetUdes_imgMedicale2/blob/master/Resultats/Transformation/transfo.png" alt="drawing" width="500"/>
 </div>
+
+# Auteurs
+
+* **Emma Jouffroy** - [PurpleBooth](https://github.com/EmmaJouffroy)
+* **Maxime Adolphe** - [PurpleBooth](https://github.com/madolphe)
+
